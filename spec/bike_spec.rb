@@ -29,7 +29,7 @@ RSpec.describe Bike do
       # Assert
       # 前 30 分鐘 5 元
       # 剩餘 110 分鐘每 30 分鐘 10 元，小計 40 元
-      # 共計 5 + 40 = 35 元
+      # 共計 5 + 40 = 45 元
       expect(rental.charge).to be 45
     end
 
