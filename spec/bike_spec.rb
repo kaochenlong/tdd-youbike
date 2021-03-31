@@ -3,9 +3,10 @@ require 'rental'
 require 'timecop'
 
 RSpec.describe Bike do
+  let(:rental) { Rental.new(user) }
+
   context '會員計費' do
     let(:user) { User.new(member: true) }
-    let(:rental) { Rental.new(user) }
 
     it "前 30 分鐘 5 元" do
       # Act
@@ -63,7 +64,30 @@ RSpec.describe Bike do
   end
 
   context '非會員計費' do
-    # it "4 小時內，費率為每 30 分鐘 10 元"
-    # it "超過 4 小時，但於 8 小時內還車，第 4~8 小時費率為每 30 分鐘 20 元"
+    let(:user) { User.new }
+
+    it "4 小時內，費率為每 30 分鐘 10 元" do
+      # Act
+      rental.rent(subject)
+      Timecop.travel(143 * 60) # 經過 2 小時 23 分後（143 分鐘）
+      rental.return(subject)
+
+      # Assert
+      # 每 30 分鐘 10 元，共計 50 元
+      expect(rental.charge).to be 50
+    end
+
+    it "超過 4 小時，但於 8 小時內還車，第 4~8 小時費率為每 30 分鐘 20 元" do
+      # Act
+      rental.rent(subject)
+      Timecop.travel(348 * 60) # 經過 5 小時 48 分後（348 分鐘）
+      rental.return(subject)
+
+      # Assert
+      # 前 4 小時，每 30 分鐘 10 元，小計 80 元
+      # 剩餘 108 分鐘，每 30 分鐘 20 元，小計 80 元
+      # 共計 80 + 80 = 160 元
+      expect(rental.charge).to be 160
+    end
   end
 end
