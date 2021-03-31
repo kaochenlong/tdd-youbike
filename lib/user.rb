@@ -7,9 +7,5 @@ class User
   def member?
     member == true
   end
-
-  def rent(bike)
-    @bike = bike
-    @bike.rent_at = Time.now
-  end
 end
+

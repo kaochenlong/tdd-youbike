@@ -44,3 +44,4 @@ class Rental
     end
   end
 end
+
