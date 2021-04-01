@@ -1,7 +1,7 @@
 class User
   attr_reader :member, :bike
-  def initialize(member: false)
-    @member = member
+  def initialize(options = {})
+    @member = options[:member]
   end
 
   def member?
